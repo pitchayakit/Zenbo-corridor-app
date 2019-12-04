@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Zenbo corridor app</string>
+
+    <!-- Main activity -->
+    <string name="bt_nlt_office">Network learning technology office</string>
+    <string name="bt_meeting_room">Meeting room</string>
+    <string name="bt_professor_office">Professor office</string>
+    <string name="bt_classroom">Classroom</string>
+    <string name="bt_restroom">Restroom</string>
 </resources>
