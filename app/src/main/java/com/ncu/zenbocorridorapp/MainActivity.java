@@ -31,7 +31,8 @@ public class MainActivity extends RobotActivity {
     private static RobotAPI mRobotApiStatic;
     private static String currentPosition;
     private static String mainPosition = "Tam desk";
-    private CountDownTimer showExpression;
+    private static CountDownTimer showExpression;
+    private static Integer countFaceDetect = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +53,15 @@ public class MainActivity extends RobotActivity {
         btProfessorOffice.setEnabled(false);
 
         startDetectFace();
-        showExpression = new CountDownTimer(5000, 1000) {
+        showExpression = new CountDownTimer(10000, 1000) {
             public void onTick(long millisUntilFinished) {
             }
             public void onFinish() {
                 robotAPI.robot.setExpression(RobotFace.DEFAULT_STILL);
-                start();
+                startDetectFace();
             }
         };
-        showExpression.start();
+
     }
 
     public static RobotCallback robotCallback = new RobotCallback() {
@@ -102,8 +103,14 @@ public class MainActivity extends RobotActivity {
             super.onDetectFaceResult(resultList);
 
             Log.d(TAG, "onDetectFaceResult: " + resultList.get(0));
-            mRobotApiStatic.robot.setExpression(RobotFace.HIDEFACE);
 
+            countFaceDetect++;
+            if(countFaceDetect % 2 != 0) {
+                mRobotApiStatic.robot.speak("Hello. I am Zenbo. Nice to meet you.");
+            }
+            mRobotApiStatic.robot.setExpression(RobotFace.HIDEFACE);
+            mRobotApiStatic.vision.cancelDetectFace();
+            showExpression.start();
         }
     };
 
@@ -146,7 +153,7 @@ public class MainActivity extends RobotActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        robotAPI.robot.speak("Hello world. I am Zenbo. Nice to meet you.");
+        robotAPI.robot.speak("Hello");
         robotAPI.robot.setExpression(RobotFace.HIDEFACE);
     }
 
@@ -154,6 +161,10 @@ public class MainActivity extends RobotActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(button != findViewById(R.id.btOffice)){
+                    Intent GroupsIntent = new Intent(MainActivity.this,MeetingRoomActivity.class);
+                    startActivity(GroupsIntent);
+                }
                 robotAPI.motion.goTo(location);
                 currentPosition = location;
             }
@@ -163,7 +174,7 @@ public class MainActivity extends RobotActivity {
     private void startDetectFace() {
         // start detect face
         VisionConfig.FaceDetectConfig config = new VisionConfig.FaceDetectConfig();
-        config.enableDebugPreview = false;  // set to true if you need preview screen
+        config.enableDebugPreview = true;  // set to true if you need preview screen
         config.intervalInMS = 1000;
         config.enableDetectHead = false;
         robotAPI.vision.requestDetectFace(config);
