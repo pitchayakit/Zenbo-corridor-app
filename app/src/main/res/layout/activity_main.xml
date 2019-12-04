@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btOffice"
         android:layout_width="872dp"
         android:layout_height="119dp"
         android:layout_marginTop="76dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btMeetingRoom"
         android:layout_width="872dp"
         android:layout_height="119dp"
         android:layout_marginTop="20dp"
@@ -26,10 +26,10 @@
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/btOffice" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btProfessorOffice"
         android:layout_width="872dp"
         android:layout_height="119dp"
         android:layout_marginTop="20dp"
@@ -37,10 +37,10 @@
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        app:layout_constraintTop_toBottomOf="@+id/btMeetingRoom" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/btClassroom"
         android:layout_width="872dp"
         android:layout_height="119dp"
         android:layout_marginTop="20dp"
@@ -48,10 +48,10 @@
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button4" />
+        app:layout_constraintTop_toBottomOf="@+id/btProfessorOffice" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/btRestroom"
         android:layout_width="872dp"
         android:layout_height="119dp"
         android:layout_marginTop="20dp"
@@ -59,6 +59,6 @@
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button5" />
+        app:layout_constraintTop_toBottomOf="@+id/btClassroom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
