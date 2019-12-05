@@ -14,6 +14,7 @@ public class MeetingRoomActivity extends RobotActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_room);
+
     }
 
     @Override
