@@ -39,26 +39,47 @@ public class MainActivity extends RobotActivity {
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        showExpression = new CountDownTimer(10000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+            public void onFinish() {
+                //mRobotApiStatic.robot.setExpression(RobotFace.DEFAULT_STILL);
+                startDetectFace();
+            }
+        };
+
         mRobotApiStatic = new RobotAPI(getApplicationContext(), robotCallback);
 
         Button btOffice = findViewById(R.id.btOffice);
         setupButtons(btOffice,"Tam desk");
 
-        Button btMeetingRoom = findViewById(R.id.btRestroom);
-        setupButtons(btMeetingRoom,"Azura desk");
+        Button btMeetingRoom = findViewById(R.id.btMeetingRoom);
+        btMeetingRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopDetectFace();
+                stopDetectFaceDelay();
+                Intent intent = new Intent(MainActivity.this, MeetingRoomActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btRestroom = findViewById(R.id.btRestroom);
+        setupButtons(btRestroom,"Azura desk");
 
         Button btProfessorOffice = findViewById(R.id.btProfessorOffice);
         btProfessorOffice.setEnabled(false);
 
+        startDetectFace();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        robotAPI.robot.speak("Hello");
-        //robotAPI.robot.setExpression(RobotFace.HIDEFACE);
+        robotAPI.robot.speak("Hi");
+        robotAPI.robot.setExpression(RobotFace.HIDEFACE);
 
-        startDetectFace();
+        startDetectFaceDelay();
     }
 
     public static RobotCallback robotCallback = new RobotCallback() {
@@ -109,7 +130,7 @@ public class MainActivity extends RobotActivity {
                 mRobotApiStatic.robot.speak("Hello. I am Zenbo. Nice to meet you.");
                 mRobotApiStatic.robot.setExpression(RobotFace.HIDEFACE);
                 stopDetectFace();
-                StartDetectFaceDelay();
+                startDetectFaceDelay();
             }
 
         }
@@ -172,32 +193,24 @@ public class MainActivity extends RobotActivity {
         // start detect face
         VisionConfig.FaceDetectConfig config = new VisionConfig.FaceDetectConfig();
         config.enableDebugPreview = true;  // set to true if you need preview screen
-        config.intervalInMS = 1000;
+        config.intervalInMS = 2000;
         config.enableDetectHead = false;
         mRobotApiStatic.vision.requestDetectFace(config);
         mRobotApiStatic.motion.remoteControlHead(MotionControl.Direction.Head.UP);
 
     }
 
-    private static void stopDetectFace() {
+    public static void stopDetectFace() {
         // stop detect face
         mRobotApiStatic.vision.cancelDetectFace();
     }
 
-    private static void StartDetectFaceDelay() {
+    private static void startDetectFaceDelay() {
         mRobotApiStatic.motion.remoteControlHead(MotionControl.Direction.Head.UP);
-        showExpression = new CountDownTimer(10000, 1000) {
-            public void onTick(long millisUntilFinished) {
-            }
-            public void onFinish() {
-                mRobotApiStatic.robot.setExpression(RobotFace.DEFAULT_STILL);
-                startDetectFace();
-            }
-        };
         showExpression.start();
     }
 
-    private static void stopDetectFaceDelay() {
+    public static void stopDetectFaceDelay() {
         showExpression.cancel();
     }
 }

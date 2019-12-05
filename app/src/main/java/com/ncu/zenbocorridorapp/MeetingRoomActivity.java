@@ -1,5 +1,9 @@
 package com.ncu.zenbocorridorapp;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+
+import com.asus.robotframework.API.MotionControl;
 import com.asus.robotframework.API.RobotCallback;
 import com.asus.robotframework.API.RobotCmdState;
 import com.asus.robotframework.API.RobotErrorCode;
@@ -9,18 +13,32 @@ import com.robot.asus.robotactivity.RobotActivity;
 import org.json.JSONObject;
 
 public class MeetingRoomActivity extends RobotActivity {
+    private CountDownTimer backToMainActivity;
+    private Intent mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_room);
 
+        robotAPI.motion.remoteControlHead(MotionControl.Direction.Head.UP);
+
+        mainActivity = new Intent(MeetingRoomActivity.this, MainActivity.class);
+        backToMainActivity = new CountDownTimer(30000, 1000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+            public void onFinish() {
+                startActivity(mainActivity);
+            }
+        }.start();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        robotAPI.robot.setExpression(RobotFace.HIDEFACE);
+        //robotAPI.robot.setExpression(RobotFace.HIDEFACE);
     }
 
     public static RobotCallback robotCallback = new RobotCallback() {
