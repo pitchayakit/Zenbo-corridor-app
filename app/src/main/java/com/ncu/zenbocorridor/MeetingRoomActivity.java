@@ -1,4 +1,4 @@
-package com.ncu.zenbocorridorapp;
+package com.ncu.zenbocorridor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -7,7 +7,6 @@ import com.asus.robotframework.API.MotionControl;
 import com.asus.robotframework.API.RobotCallback;
 import com.asus.robotframework.API.RobotCmdState;
 import com.asus.robotframework.API.RobotErrorCode;
-import com.asus.robotframework.API.RobotFace;
 import com.robot.asus.robotactivity.RobotActivity;
 
 import org.json.JSONObject;
