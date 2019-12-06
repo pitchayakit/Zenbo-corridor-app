@@ -15,7 +15,6 @@ import com.asus.robotframework.API.RobotCmdState;
 import com.asus.robotframework.API.RobotErrorCode;
 import com.asus.robotframework.API.RobotFace;
 import com.asus.robotframework.API.VisionConfig;
-import com.asus.robotframework.API.WheelLights;
 import com.asus.robotframework.API.results.DetectFaceResult;
 import com.asus.robotframework.API.results.DetectPersonResult;
 import com.asus.robotframework.API.results.GesturePointResult;
@@ -30,7 +29,7 @@ import static android.content.ContentValues.TAG;
 public class MainActivity extends RobotActivity {    private static RobotAPI mRobotApiStatic;
     public final static String DOMAIN = "E83AF3B5DB0D440095A8C1C785E942CE";
     private static String currentPosition;
-    private static String mainPosition = "nlt office";
+    private static String mainPosition = "main position";
     private static CountDownTimer showExpression;
     private static Integer countFaceDetect = 0;
 
@@ -51,14 +50,7 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
         mRobotApiStatic = new RobotAPI(getApplicationContext(), robotCallback);
 
         Button btOffice = findViewById(R.id.btOffice);
-        btOffice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopDetectFace();
-                stopDetectFaceDelay();
-                startActivity(new Intent(MainActivity.this, OfficeActivity.class));
-            }
-        });
+        setupGoToLocationButtons(btOffice,"nlt office");
 
         Button btMeetingRoom = findViewById(R.id.btMeetingRoom);
         btMeetingRoom.setOnClickListener(new View.OnClickListener() {
@@ -74,12 +66,12 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
         btProfessorOffice.setEnabled(false);
 
         Button btClassroom = findViewById(R.id.btClassroom);
-        setupButtons(btClassroom,"classroom b");
+        setupGoToLocationButtons(btClassroom,"classroom b");
 
         Button btRestroom = findViewById(R.id.btRestroom);
-        setupButtons(btRestroom,"restroom b");
+        btRestroom.setEnabled(false);
 
-        robotAPI.robot.speak("Hello. I am Zenbo. Nice to meet you.");
+        //robotAPI.robot.speak("Hello. I am Zenbo. Nice to meet you.");
         startDetectFace();
     }
 
@@ -91,7 +83,7 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
         //robotAPI.robot.speak("What are you looking for?");
         //robotAPI.robot.setExpression(RobotFace.HIDEFACE);
 
-        startDetectFaceDelay();
+        //startDetectFaceDelay();
     }
 
     @Override
@@ -121,6 +113,7 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
         @Override
         public void onStateChange(int cmd, int serial, RobotErrorCode err_code, RobotCmdState state) {
             super.onStateChange(cmd, serial, err_code, state);
+            Log.d(TAG, "onStateChange: " + state);
         }
 
         @Override
@@ -193,19 +186,18 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
         super(robotCallback, robotListenCallback);
     }
 
-    private void setupButtons (final Button button, final String location){
+    private void setupGoToLocationButtons(final Button button, final String location){
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(button == findViewById(R.id.btMeetingRoom)){
-                    Intent GroupsIntent = new Intent(MainActivity.this,MeetingRoomActivity.class);
-                    startActivity(GroupsIntent);
-                }
-                robotAPI.motion.goTo(location);
+                mRobotApiStatic.robot.speak("I am going to "+location+" please follow me.");
                 currentPosition = location;
                 stopDetectFace();
                 stopDetectFaceDelay();
+                robotAPI.motion.goTo(location);
                 mRobotApiStatic.robot.setExpression(RobotFace.DEFAULT_STILL);
+
+
             }
         });
     }
@@ -228,7 +220,6 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
     }
 
     private static void startDetectFaceDelay() {
-        mRobotApiStatic.motion.remoteControlHead(MotionControl.Direction.Head.UP);
         showExpression.start();
     }
 
