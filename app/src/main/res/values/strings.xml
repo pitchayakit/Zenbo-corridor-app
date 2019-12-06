@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Zenbo corridor app</string>
+    <string name="app_name">Zenbo corridor</string>
 
     <!-- Main activity -->
     <string name="bt_nlt_office">Network learning technology office</string>

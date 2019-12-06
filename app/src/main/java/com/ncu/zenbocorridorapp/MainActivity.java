@@ -1,4 +1,4 @@
-package com.ncu.zenbocorridor;
+package com.ncu.zenbocorridorapp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.asus.robotframework.API.RobotCmdState;
 import com.asus.robotframework.API.RobotErrorCode;
 import com.asus.robotframework.API.RobotFace;
 import com.asus.robotframework.API.VisionConfig;
+import com.asus.robotframework.API.WheelLights;
 import com.asus.robotframework.API.results.DetectFaceResult;
 import com.asus.robotframework.API.results.DetectPersonResult;
 import com.asus.robotframework.API.results.GesturePointResult;
@@ -26,10 +27,10 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends RobotActivity {
-    private static RobotAPI mRobotApiStatic;
+public class MainActivity extends RobotActivity {    private static RobotAPI mRobotApiStatic;
+    public final static String DOMAIN = "E83AF3B5DB0D440095A8C1C785E942CE";
     private static String currentPosition;
-    private static String mainPosition = "Tam desk";
+    private static String mainPosition = "nlt office";
     private static CountDownTimer showExpression;
     private static Integer countFaceDetect = 0;
 
@@ -43,7 +44,6 @@ public class MainActivity extends RobotActivity {
             public void onTick(long millisUntilFinished) {
             }
             public void onFinish() {
-                //mRobotApiStatic.robot.setExpression(RobotFace.DEFAULT_STILL);
                 startDetectFace();
             }
         };
@@ -51,7 +51,14 @@ public class MainActivity extends RobotActivity {
         mRobotApiStatic = new RobotAPI(getApplicationContext(), robotCallback);
 
         Button btOffice = findViewById(R.id.btOffice);
-        setupButtons(btOffice,"Tam desk");
+        btOffice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopDetectFace();
+                stopDetectFaceDelay();
+                startActivity(new Intent(MainActivity.this, OfficeActivity.class));
+            }
+        });
 
         Button btMeetingRoom = findViewById(R.id.btMeetingRoom);
         btMeetingRoom.setOnClickListener(new View.OnClickListener() {
@@ -59,27 +66,41 @@ public class MainActivity extends RobotActivity {
             public void onClick(View v) {
                 stopDetectFace();
                 stopDetectFaceDelay();
-                Intent intent = new Intent(MainActivity.this, MeetingRoomActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, MeetingRoomActivity.class));
             }
         });
-
-        Button btRestroom = findViewById(R.id.btRestroom);
-        setupButtons(btRestroom,"Azura desk");
 
         Button btProfessorOffice = findViewById(R.id.btProfessorOffice);
         btProfessorOffice.setEnabled(false);
 
+        Button btClassroom = findViewById(R.id.btClassroom);
+        setupButtons(btClassroom,"classroom b");
+
+        Button btRestroom = findViewById(R.id.btRestroom);
+        setupButtons(btRestroom,"restroom b");
+
+        robotAPI.robot.speak("Hello. I am Zenbo. Nice to meet you.");
         startDetectFace();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        robotAPI.robot.speak("Hi");
-        robotAPI.robot.setExpression(RobotFace.HIDEFACE);
+        // jump dialog domain
+        robotAPI.robot.jumpToPlan(DOMAIN, "ThisPlanLaunchingThisApp");
+        //robotAPI.robot.speak("What are you looking for?");
+        //robotAPI.robot.setExpression(RobotFace.HIDEFACE);
 
         startDetectFaceDelay();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        stopDetectFace();
+        stopDetectFaceDelay();
+
     }
 
     public static RobotCallback robotCallback = new RobotCallback() {
@@ -197,6 +218,7 @@ public class MainActivity extends RobotActivity {
         config.enableDetectHead = false;
         mRobotApiStatic.vision.requestDetectFace(config);
         mRobotApiStatic.motion.remoteControlHead(MotionControl.Direction.Head.UP);
+        mRobotApiStatic.robot.setExpression(RobotFace.DEFAULT_STILL);
 
     }
 

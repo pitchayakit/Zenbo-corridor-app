@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MeetingRoomActivity">
+    tools:context=".OfficeActivity">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="495dp"
-        android:layout_height="339dp"
-        android:layout_marginTop="152dp"
-        android:text="@string/bt_meeting_room"
+        android:id="@+id/textView"
+        android:layout_width="593dp"
+        android:layout_height="202dp"
+        android:layout_marginTop="180dp"
+        android:text="NLT Office"
         android:textAlignment="center"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,9 +22,10 @@
         android:id="@+id/btBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="68dp"
         android:text="Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.ncu.zenbocorridor;
+package com.ncu.zenbocorridorapp;
 
 import android.content.Context;
 

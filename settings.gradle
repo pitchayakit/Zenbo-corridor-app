@@ -1,2 +1,2 @@
 include ':app', ':RobotActivityLibrary'
-rootProject.name='Zenbo corridor app'
+rootProject.name='Zenbo corridor'

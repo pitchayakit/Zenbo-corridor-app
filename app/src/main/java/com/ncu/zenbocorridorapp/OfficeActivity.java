@@ -1,7 +1,10 @@
-package com.ncu.zenbocorridor;
+package com.ncu.zenbocorridorapp;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.View;
+import android.widget.Button;
 
 import com.asus.robotframework.API.MotionControl;
 import com.asus.robotframework.API.RobotCallback;
@@ -11,26 +14,33 @@ import com.robot.asus.robotactivity.RobotActivity;
 
 import org.json.JSONObject;
 
-public class MeetingRoomActivity extends RobotActivity {
+public class OfficeActivity extends RobotActivity {
     private CountDownTimer backToMainActivity;
-    private Intent mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_room);
+        setContentView(R.layout.activity_office);
 
         robotAPI.motion.remoteControlHead(MotionControl.Direction.Head.UP);
 
-        mainActivity = new Intent(MeetingRoomActivity.this, MainActivity.class);
         backToMainActivity = new CountDownTimer(30000, 1000) {
             public void onTick(long millisUntilFinished) {
 
             }
             public void onFinish() {
-                startActivity(mainActivity);
+                finish();
             }
         }.start();
+
+        Button btBack = findViewById(R.id.btBack);
+        btBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backToMainActivity.cancel();
+                finish();
+            }
+        });
 
     }
 
@@ -90,7 +100,7 @@ public class MeetingRoomActivity extends RobotActivity {
         }
     };
 
-    public MeetingRoomActivity() {
+    public OfficeActivity() {
         super(robotCallback, robotListenCallback);
     }
 }
