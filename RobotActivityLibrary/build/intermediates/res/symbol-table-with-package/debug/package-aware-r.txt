@@ -1,2 +1,0 @@
-com.robot.asus.robotactivity
-string app_name

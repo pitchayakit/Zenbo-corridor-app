@@ -14,6 +14,8 @@ import com.asus.robotframework.API.RobotCallback;
 import com.asus.robotframework.API.RobotCmdState;
 import com.asus.robotframework.API.RobotErrorCode;
 import com.asus.robotframework.API.RobotFace;
+import com.asus.robotframework.API.RobotUtil;
+import com.asus.robotframework.API.SpeakConfig;
 import com.asus.robotframework.API.VisionConfig;
 import com.asus.robotframework.API.results.DetectFaceResult;
 import com.asus.robotframework.API.results.DetectPersonResult;
@@ -32,6 +34,7 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
     private static String mainPosition = "main position";
     private static CountDownTimer showExpression;
     private static Integer countFaceDetect = 0;
+    private static Button btOffice,btMeetingRoom,btProfessorOffice,btClassroom,btRestroom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,7 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        showExpression = new CountDownTimer(10000, 1000) {
+        showExpression = new CountDownTimer(15000, 1000) {
             public void onTick(long millisUntilFinished) {
             }
             public void onFinish() {
@@ -49,26 +52,19 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
 
         mRobotApiStatic = new RobotAPI(getApplicationContext(), robotCallback);
 
-        Button btOffice = findViewById(R.id.btOffice);
+        btOffice = findViewById(R.id.btOffice);
         setupGoToLocationButtons(btOffice,"nlt office");
 
-        Button btMeetingRoom = findViewById(R.id.btMeetingRoom);
-        btMeetingRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopDetectFace();
-                stopDetectFaceDelay();
-                startActivity(new Intent(MainActivity.this, MeetingRoomActivity.class));
-            }
-        });
+        btMeetingRoom = findViewById(R.id.btMeetingRoom);
+        btMeetingRoom.setEnabled(false);
 
-        Button btProfessorOffice = findViewById(R.id.btProfessorOffice);
+        btProfessorOffice = findViewById(R.id.btProfessorOffice);
         btProfessorOffice.setEnabled(false);
 
-        Button btClassroom = findViewById(R.id.btClassroom);
+        btClassroom = findViewById(R.id.btClassroom);
         setupGoToLocationButtons(btClassroom,"classroom b");
 
-        Button btRestroom = findViewById(R.id.btRestroom);
+        btRestroom = findViewById(R.id.btRestroom);
         btRestroom.setEnabled(false);
 
         //robotAPI.robot.speak("Hello. I am Zenbo. Nice to meet you.");
@@ -141,7 +137,7 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
 
             countFaceDetect++;
             if(countFaceDetect % 2 != 0) {
-                mRobotApiStatic.robot.speak("Hello. I am Zenbo. Nice to meet you.");
+                mRobotApiStatic.robot.speakAndListen("Hello. I am Zenbo. Nice to meet you.",new SpeakConfig().timeout(20));
                 mRobotApiStatic.robot.setExpression(RobotFace.HIDEFACE);
                 stopDetectFace();
                 startDetectFaceDelay();
@@ -173,7 +169,24 @@ public class MainActivity extends RobotActivity {    private static RobotAPI mRo
 
         @Override
         public void onResult(JSONObject jsonObject) {
+            String text;
+            text = "onResult: " + jsonObject.toString();
+            Log.d(TAG, text);
 
+
+            String sIntentionID = RobotUtil.queryListenResultJson(jsonObject, "IntentionId");
+            Log.d(TAG, "Intention Id = " + sIntentionID);
+
+            if(sIntentionID.equals("corridor")) {
+                String resultPosition = RobotUtil.queryListenResultJson(jsonObject, "goToPosition", null);
+
+                if(resultPosition!= null && resultPosition.equals("classroom")) {
+                    btClassroom.performClick();
+                }
+                else if(resultPosition!= null && resultPosition.equals("nlt_office")){
+                    btOffice.performClick();
+                }
+            }
         }
 
         @Override
